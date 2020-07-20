@@ -1,3 +1,4 @@
+from json import JSONEncoder
 from random import randint, choice
 
 from config import Config
@@ -13,3 +14,8 @@ class Player(object):
         }
         self.color = (randint(0, 255), randint(0, 255), randint(0, 255))
         # [X,Y]: [0,-1] UP; [0,1] DOWN; [1,0] RIGHT; [-1,0] LEFT
+
+
+class PlayerEncoder(JSONEncoder):
+    def default(self, o: any) -> any:
+        return o.__dict__
