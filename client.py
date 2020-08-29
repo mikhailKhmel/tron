@@ -16,6 +16,12 @@ class Game:
         pygame.display.update()
         self.main_cycle()
 
+    def restart(self):
+        self.player = Player()
+        self.bot = Player()
+        self.members = [self.player, self.bot]
+        self.sc.fill((0, 0, 0))
+
     def check_game_over(self):
         res = 0
         for member in self.members:
@@ -68,7 +74,8 @@ class Game:
             pygame.draw.rect(self.sc, member.color,
                              (member.lightcycle['head'][0] - 2, member.lightcycle['head'][1] - 2, 5, 5))  # render head
             for tail in member.lightcycle['tail']:  # render tails
-                pygame.draw.rect(self.sc, member.color, (tail[0], tail[1], 1, 1))
+                pygame.draw.rect(self.sc, member.color,
+                                 (tail[0], tail[1], 1, 1))
 
     def main_cycle(self):
         previous_key = self.player.lightcycle['direction']
@@ -80,9 +87,9 @@ class Game:
                 for member in self.members:
                     member.lightcycle['tail'].append(member.lightcycle['head'])
                     member.lightcycle['head'] = [
-                        member.lightcycle['head'][0] + member.lightcycle['direction'][0],
+                        member.lightcycle['head'][0] +
+                        member.lightcycle['direction'][0],
                         member.lightcycle['head'][1] + member.lightcycle['direction'][1]]
-
                 for i in pygame.event.get():
                     if i.type == pygame.QUIT:
                         exit()
@@ -104,7 +111,13 @@ class Game:
                                 continue
                             self.player.lightcycle['direction'] = [-1, 0]
                         previous_key = self.player.lightcycle['direction']
-
+            else:
+                for i in pygame.event.get():
+                    if i.type == pygame.QUIT:
+                        exit()
+                    elif i.type == pygame.KEYDOWN:
+                        if i.key == pygame.K_SPACE:
+                            self.restart()
             self.bot_logic()
             pygame.display.update()
 
